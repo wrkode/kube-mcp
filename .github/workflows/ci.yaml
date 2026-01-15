@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-vet:
+    name: Unit tests & go vet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.11'
+          cache: true
+
+      - name: Go vet
+        run: go vet ./...
+
+      - name: Unit tests (pkg)
+        run: go test ./pkg/...
+
+  integration-tests:
+    name: Integration tests (envtest)
+    runs-on: ubuntu-latest
+    needs: unit-and-vet
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.11'
+          cache: true
+
+      - name: Install setup-envtest
+        run: |
+          go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+      - name: Run integration tests with envtest
+        run: |
+          # Ensure setup-envtest is on PATH
+          export PATH="$(go env GOPATH)/bin:$PATH"
+
+          # Download and configure envtest binaries for a recent Kubernetes version
+          setup-envtest use -p env 1.31.x > envtest.env
+          source envtest.env
+
+          # Run integration tests
+          go test ./test/integration/...

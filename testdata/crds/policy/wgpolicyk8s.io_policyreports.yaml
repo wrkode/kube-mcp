@@ -1,0 +1,48 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: policyreports.wgpolicyk8s.io
+spec:
+  group: wgpolicyk8s.io
+  versions:
+  - name: v1alpha2
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          results:
+            type: array
+            items:
+              type: object
+              properties:
+                policy:
+                  type: string
+                rule:
+                  type: string
+                message:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+                severity:
+                  type: string
+                resources:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                      apiVersion:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+  scope: Namespaced
+  names:
+    plural: policyreports
+    singular: policyreport
+    kind: PolicyReport

@@ -1,0 +1,76 @@
+# Minimal STDIO-only configuration example
+# This is the default and recommended configuration for MCP clients like Cursor
+#
+# STDIO transport:
+#   - Uses stdin/stdout for MCP communication
+#   - No [server.stdio] section needed (unlike HTTP)
+#   - Automatically enabled when transports = ["stdio"]
+#   - This is the default transport if none specified
+
+[server]
+transports = ["stdio"]
+log_level = "info"
+
+[kubernetes]
+provider = "kubeconfig"
+kubeconfig_path = "~/.kube/config"
+context = ""
+default_namespace = ""
+qps = 100
+burst = 200
+timeout = "30s"
+
+[security]
+read_only = false
+non_destructive = false
+denied_gvks = []
+require_rbac = true
+
+[helm]
+storage_driver = "secret"
+default_namespace = "default"
+
+[kubevirt]
+enabled = true
+vm_group_version = "kubevirt.io/v1"
+
+[kiali]
+enabled = false
+url = ""
+token = ""
+timeout = "30s"
+
+[kiali.tls]
+enabled = false
+ca_file = ""
+cert_file = ""
+key_file = ""
+insecure_skip_verify = false
+
+[toolsets.gitops]
+enabled = true
+
+[toolsets.policy]
+enabled = true
+
+[toolsets.capi]
+enabled = true
+
+[toolsets.rollouts]
+enabled = true
+
+[toolsets.certs]
+enabled = true
+
+[toolsets.autoscaling]
+enabled = true
+
+[toolsets.backup]
+enabled = true
+
+[toolsets.net]
+enabled = true
+hubble_api_url = ""
+hubble_insecure = false
+hubble_ca_file = ""
+hubble_timeout = "10s"

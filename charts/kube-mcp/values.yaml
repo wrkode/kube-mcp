@@ -1,0 +1,290 @@
+# Default values for kube-mcp
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+
+# Image configuration
+image:
+  registry: ghcr.io
+  repository: wrkode/kube-mcp
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+# Image pull secrets
+imagePullSecrets: []
+
+# Service account configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# RBAC configuration
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+  # ClusterRole rules - adjust based on your needs
+  rules:
+    - apiGroups: [""]
+      resources: ["*"]
+      verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+    - apiGroups: ["apps"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+    - apiGroups: ["*"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+    # For scaling operations
+    - apiGroups: ["apps"]
+      resources: ["deployments/scale", "statefulsets/scale", "replicasets/scale"]
+      verbs: ["get", "update", "patch"]
+    # For pod exec and logs
+    - apiGroups: [""]
+      resources: ["pods/exec", "pods/log", "pods/portforward"]
+      verbs: ["create", "get"]
+    # For metrics
+    - apiGroups: ["metrics.k8s.io"]
+      resources: ["*"]
+      verbs: ["get", "list"]
+    # For RBAC checks
+    - apiGroups: ["authorization.k8s.io"]
+      resources: ["selfsubjectaccessreviews"]
+      verbs: ["create"]
+    # For Helm operations
+    - apiGroups: [""]
+      resources: ["secrets", "configmaps"]
+      verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+    # For KubeVirt (if enabled)
+    - apiGroups: ["kubevirt.io"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+# Pod security context
+podSecurityContext:
+  fsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+# Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+
+# Deployment configuration
+replicaCount: 1
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod labels
+podLabels: {}
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Resources
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Liveness probe
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Readiness probe
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  annotations: {}
+  labels: {}
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: kube-mcp.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Server configuration
+server:
+  # Enabled transports: stdio, http
+  transports:
+    - http
+  logLevel: info
+
+  # HTTP server configuration
+  http:
+    address: "0.0.0.0:8080"
+    oauth:
+      enabled: false
+      provider: oidc
+      issuerURL: ""
+      clientID: ""
+      clientSecret: ""
+      scopes:
+        - openid
+        - profile
+      redirectURL: ""
+    cors:
+      enabled: true
+      allowedOrigins:
+        - "*"
+      allowedMethods:
+        - GET
+        - POST
+        - OPTIONS
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+
+      enabled: false
+      provider: oidc
+      issuerURL: ""
+      clientID: ""
+      clientSecret: ""
+      scopes:
+        - openid
+        - profile
+
+# Kubernetes client configuration
+kubernetes:
+  # Provider: kubeconfig, in-cluster, single
+  # For in-cluster deployment, use "in-cluster"
+  provider: in-cluster
+  kubeconfigPath: ""
+  context: ""
+  defaultNamespace: ""
+  qps: 100
+  burst: 200
+  timeout: "30s"
+
+# Security configuration
+security:
+  readOnly: false
+  nonDestructive: false
+  deniedGVKs: []
+  requireRBAC: true
+  validateToken: true
+  rbacCacheTTL: 5
+
+# Helm configuration
+helm:
+  storageDriver: secret
+  defaultNamespace: default
+
+# KubeVirt configuration
+kubevirt:
+  enabled: true
+  vmGroupVersion: kubevirt.io/v1
+
+# Kiali configuration
+kiali:
+  enabled: false
+  url: ""
+  token: ""
+  timeout: "30s"
+  tls:
+    enabled: false
+    caFile: ""
+    certFile: ""
+    keyFile: ""
+    insecureSkipVerify: false
+
+# Extra environment variables
+env: []
+# Example:
+# env:
+#   - name: CUSTOM_VAR
+#     value: "custom-value"
+
+# Extra volumes
+extraVolumes: []
+# Example:
+# extraVolumes:
+#   - name: custom-volume
+#     configMap:
+#       name: custom-config
+
+# Extra volume mounts
+extraVolumeMounts: []
+# Example:
+# extraVolumeMounts:
+#   - name: custom-volume
+#     mountPath: /custom/path
+#     readOnly: true
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  # maxUnavailable: 1
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# ServiceMonitor for Prometheus (if using Prometheus Operator)
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
+
+# PodMonitor for Prometheus (if using Prometheus Operator)
+podMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
+

@@ -1,0 +1,25 @@
+apiVersion: v2
+name: kube-mcp
+description: A Helm chart for kube-mcp - A Model Context Protocol (MCP) server for Kubernetes management
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+home: https://github.com/wrkode/kube-mcp
+sources:
+  - https://github.com/wrkode/kube-mcp
+maintainers:
+  - name: William Rizzo
+    email: william.rizzo@gmail.com
+keywords:
+  - kubernetes
+  - mcp
+  - model-context-protocol
+  - kubernetes-management
+  - helm
+  - kubevirt
+  - kiali
+icon: https://raw.githubusercontent.com/wrkode/kube-mcp/main/docs/logo.png
+annotations:
+  category: Management
+  licenses: Apache-2.0
+
