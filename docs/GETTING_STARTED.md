@@ -362,11 +362,12 @@ curl http://localhost:8080/health
 
 ## Next Steps
 
-1. **Read the Configuration Guide**: [CONFIGURATION.md](CONFIGURATION.md)
-2. **Explore Tools**: [TOOLS.md](TOOLS.md)
-3. **Learn Multi-Cluster**: [MULTI_CLUSTER.md](MULTI_CLUSTER.md)
-4. **Usage Patterns**: [USAGE_GUIDE.md](USAGE_GUIDE.md)
-5. **Security Setup**: [SECURITY.md](SECURITY.md)
+1. **Connect Your Client**: [CLIENT_CONFIGURATION.md](CLIENT_CONFIGURATION.md) - Connect to Cursor, Claude Code, and other MCP clients
+2. **Read the Configuration Guide**: [CONFIGURATION.md](CONFIGURATION.md)
+3. **Explore Tools**: [TOOLS.md](TOOLS.md)
+4. **Learn Multi-Cluster**: [MULTI_CLUSTER.md](MULTI_CLUSTER.md)
+5. **Usage Patterns**: [USAGE_GUIDE.md](USAGE_GUIDE.md)
+6. **Security Setup**: [SECURITY.md](SECURITY.md)
 
 ## Troubleshooting
 

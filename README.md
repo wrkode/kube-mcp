@@ -98,6 +98,9 @@ See [examples/config.toml](examples/config.toml) for a sample configuration file
 
 ## Documentation
 
+### Client Configuration
+- **[Client Configuration Guide](docs/CLIENT_CONFIGURATION.md)** - Connect kube-mcp to Cursor, Claude Code, and other MCP clients
+
 ### Getting Started
 - **[Getting Started](docs/GETTING_STARTED.md)** - Quick start guide and installation
 - **[Usage Guide](docs/USAGE_GUIDE.md)** - Practical examples and workflows
